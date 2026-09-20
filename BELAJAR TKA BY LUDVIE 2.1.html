@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELAJAR TKA BY LUDVIE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2C3E50;
+            --light: #F7F9F9;
+            --sd-color: #ff9ff3;
+            --smp-color: #54a0ff;
+            --sma-color: #5f27cd;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--light); color: var(--dark); overflow-x: hidden; }
+        
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary), #ff4757);
+            color: white; padding: 20px; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
+        }
+        header h1 { font-size: 2.5rem; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); letter-spacing: 2px; }
+        .nav-btn {
+            background: white; color: var(--primary); border: none;
+            padding: 10px 20px; margin: 10px 5px; border-radius: 20px;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-btn:hover { background: var(--accent); transform: translateY(-2px); }
+        
+        /* Page Containers */
+        .page { display: none; padding: 30px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Dashboard Profile */
+        .profile-card {
+            background: white; border-radius: 20px; padding: 30px;
+            display: flex; align-items: center; gap: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px;
+            border-left: 10px solid var(--secondary);
+        }
+        .avatar-section { font-size: 5rem; cursor: pointer; position: relative; }
+        .avatar-section:hover::after {
+            content: 'Ubah'; position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.7); color: white; font-size: 1rem;
+            text-align: center; border-radius: 10px;
+        }
+        .profile-info h2 { font-size: 2rem; display: flex; align-items: center; gap: 10px; }
+        .edit-name-btn { font-size: 1rem; padding: 5px 10px; cursor: pointer; background: #eee; border:none; border-radius: 5px; }
+        .level-badge { background: var(--secondary); color: white; padding: 5px 15px; border-radius: 15px; font-size: 0.9rem; }
+        .exp-bar-container { width: 100%; background: #eee; height: 20px; border-radius: 10px; margin-top: 15px; overflow: hidden; position: relative; }
+        .exp-bar { background: var(--accent); height: 100%; width: 0%; transition: 1s ease-out; }
+        .exp-text { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 0.8rem; font-weight: 600; line-height: 20px; }
+
+        /* Mentors */
+        .mentors-container { display: flex; gap: 20px; justify-content: space-around; margin-top: 30px; flex-wrap: wrap; }
+        .mentor-card {
+            background: white; padding: 20px; border-radius: 20px; width: 30%; text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
+        }
+        .mentor-card:hover { transform: translateY(-10px); }
+        .mentor-card.sd { border-bottom: 5px solid var(--sd-color); }
+        .mentor-card.smp { border-bottom: 5px solid var(--smp-color); }
+        .mentor-card.sma { border-bottom: 5px solid var(--sma-color); }
+
+        /* Cards & Menus */
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .menu-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; text-align: center; border-top: 5px solid var(--secondary); }
+        .menu-card:hover { background: var(--secondary); color: white; transform: translateY(-5px); }
+        
+        .section-title { font-size: 1.5rem; margin: 20px 0 10px 0; color: var(--dark); border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+
+        /* Quiz Play Area */
+        .quiz-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; text-align: center;}
+        .question-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 30px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .option-btn { background: #f1f2f6; border: 2px solid #dfe4ea; padding: 15px; font-size: 1.2rem; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .option-btn:hover { background: var(--secondary); color: white; }
+        .option-btn.correct { background: #2ed573; color: white; border-color: #2ed573; }
+        .option-btn.wrong { background: #ff4757; color: white; border-color: #ff4757; }
+        .analysis-box { background: #eccc68; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-weight: 600; text-align: left; }
+        
+        .action-btns { display: flex; justify-content: space-between; }
+        .btn { padding: 10px 25px; border-radius: 25px; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-kembali { background: #ff4757; color: white; }
+        .btn-lanjut { background: var(--secondary); color: white; display: none; }
+        .btn-kembali:hover, .btn-lanjut:hover { opacity: 0.8; }
+
+        /* Modul / History Tables */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .data-table th { background: var(--dark); color: white; }
+
+        .coming-soon { opacity: 0.6; pointer-events: none; }
+        .coming-soon::after { content: ' (COMING SOON)'; color: red; font-size: 0.8rem; display: block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BELAJAR TKA BY LUDVIE 🧮✨</h1>
+        <p>Matematika itu Sangat Sangat Seru!</p>
+        <div style="margin-top: 15px;">
+            <button class="nav-btn" onclick="nav('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="nav('latihan')">Latihan Soal</button>
+            <button class="nav-btn" onclick="nav('modul')">Modul (Materi)</button>
+            <button class="nav-btn" onclick="nav('survei')">Survei Karakter</button>
+            <button class="nav-btn" onclick="nav('raport')">Raport</button>
+        </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+        <div class="profile-card">
+            <div class="avatar-section" id="avatar-display" onclick="changeAvatar()">🤓</div>
+            <div class="profile-info">
+                <h2><span id="user-name">Pengguna</span> <button class="edit-name-btn" onclick="changeName()">✏️ Edit</button></h2>
+                <div style="margin-top: 10px;">
+                    <span class="level-badge">Level <span id="user-level">1</span> - <span id="user-title">Beginner</span></span>
+                </div>
+                <div class="exp-bar-container">
+                    <div class="exp-bar" id="exp-bar"></div>
+                    <div class="exp-text"><span id="user-exp">0</span> / <span id="exp-next">100</span> EXP</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 20px;">Pilih Mentor Pendampingmu!</h2>
+        <div class="mentors-container">
+            <div class="mentor-card sd" onclick="greetMentor('Xaviera')">
+                <div style="font-size: 4rem;">👩🏻‍🏫</div>
+                <h3>Xaviera (SD)</h3>
+                <p>Materi Lengkap SD Kelas 1-6</p>
+                <small>IQ > 300 | Halus & Ramah</small>
+            </div>
+            <div class="mentor-card smp" onclick="greetMentor('Jerome')">
+                <div style="font-size: 4rem;">👨🏻‍🏫</div>
+                <h3>Jerome (SMP)</h3>
+                <p>Materi Lengkap TKA SMP</p>
+                <small>IQ > 300 | Asik & Energik</small>
+            </div>
+            <div class="mentor-card sma" onclick="greetMentor('Sandy')">
+                <div style="font-size: 4rem;">🧑🏻‍🎓</div>
+                <h3>Sandy (SMA)</h3>
+                <p>Materi TKA SMA</p>
+                <small>IQ > 300 | Cerdas & Fokus</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- LATIHAN SOAL -->
+    <div id="page-latihan" class="page">
+        <h2>Pilih Materi Latihan Soal Lengkap (Masing-masing 50 Soal)</h2>
+        <p style="margin-bottom: 20px;">Berhasil menjawab = +5 EXP. Salah = 0 EXP.</p>
+        
+        <div class="section-title">🏫 Jenjang SD (Mentor: Xaviera)</div>
+        <div class="grid-menu">
+            <div class="menu-card" onclick="startQuiz('SD', 'Bilangan')"><h3>SD - Bilangan, Pecahan & Operasi Hitung</h3><p>FPB, KPK, Operasi Pecahan, Desimal</p></div>
+            <div class="menu-card" onclick="startQuiz('SD', 'Geometri')"><h3>SD - Geometri & Pengukuran</h3><p>Luas, Keliling, Volume & Satuan</p></div>
+            <div class="menu-card" onclick="startQuiz('SD', 'Statistik')"><h3>SD - Pengolahan Data</h3><p>Diagram Batang, Garis, & Rata-rata</p></div>
+        </div>
+
+        <div class="section-title">🏫 Jenjang SMP (Mentor: Jerome)</div>
+        <div class="grid-menu">
+            <div class="menu-card" onclick="startQuiz('SMP', 'Bilangan')"><h3>SMP - Bilangan Real & Aritmetika</h3><p>Pangkat, Akar, Pola Bilangan, Skala</p></div>
+            <div class="menu-card" onclick="startQuiz('SMP', 'Aljabar')"><h3>SMP - Aljabar & Fungsi</h3><p>PLDV, Sistem Persamaan, Barisan</p></div>
+            <div class="menu-card" onclick="startQuiz('SMP', 'Geometri')"><h3>SMP - Geometri & Transformasi</h3><p>Pythagoras, Sudut, Transformasi</p></div>
+            <div class="menu-card" onclick="startQuiz('SMP', 'Statistik')"><h3>SMP - Data & Peluang</h3><p>Statistika Dasar & Probabilitas</p></div>
+        </div>
+
+        <div class="section-title">🏫 Jenjang SMA (Mentor: Sandy)</div>
+        <div class="grid-menu">
+            <div class="menu-card coming-soon"><h3>SMA - TKA Matematika Lanjut</h3><p>Kalkulus, Trigonometri, Vektor</p></div>
+        </div>
+    </div>
+
+    <!-- QUIZ PLAY -->
+    <div id="page-quiz-play" class="page">
+        <div class="quiz-container">
+            <h3 id="quiz-title" style="margin-bottom: 10px; color: var(--secondary);">Latihan Soal</h3>
+            <p style="margin-bottom: 20px; font-weight:bold;">Soal <span id="q-current">1</span> dari 50</p>
+            
+            <div id="question-text" class="question-text">Memuat soal...</div>
+            <div id="options-grid" class="options-grid"></div>
+            
+            <div id="analysis-box" class="analysis-box">Penjelasan akan muncul di sini.</div>
+            
+            <div class="action-btns">
+                <button class="btn btn-kembali" onclick="nav('latihan')">Kembali / Batal</button>
+                <button class="btn btn-lanjut" id="btn-lanjut" onclick="nextQuestion()">Selanjutnya ➡️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODUL (MATERI) -->
+    <div id="page-modul" class="page">
+        <h2>Modul Materi Pembelajaran Lengkap</h2>
+        <p style="margin-bottom: 20px;">Pelajari materi sesuai kurikulum sebelum kamu memulai latihan soal.</p>
+        <div class="grid-menu">
+            <div class="menu-card" onclick="readModul('SD')"><h3>Materi Lengkap SD Kelas 1-6</h3></div>
+            <div class="menu-card" onclick="readModul('SMP')"><h3>Materi Lengkap TKA SMP</h3></div>
+            <div class="menu-card coming-soon"><h3>Materi Lengkap TKA SMA</h3></div>
+        </div>
+        <div id="modul-content" style="margin-top: 30px; background: white; padding: 25px; border-radius: 10px; display: none; line-height: 1.6;"></div>
+    </div>
+
+    <!-- SURVEI KARAKTER -->
+    <div id="page-survei" class="page">
+        <h2>Survei Karakter & Lingkungan Sekolah</h2>
+        <p style="margin-bottom: 20px;">Latihan soal untuk Survei Karakter TKA.</p>
+        <div class="grid-menu">
+            <div class="menu-card" onclick="startQuiz('Survei', 'Karakter')">
+                <h3>Mulai Simulasi Survei Karakter (50 Soal)</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAPORT -->
+    <div id="page-raport" class="page">
+        <h2>Raport & Kemampuanmu</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Riwayat Ujian</th>
+                    <th>Benar</th>
+                    <th>Salah</th>
+                    <th>EXP Didapat</th>
+                </tr>
+            </thead>
+            <tbody id="raport-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let userData = JSON.parse(localStorage.getItem('ludvie_tka_save')) || {
+            name: 'Pemain Baru', avatar: '🤓', exp: 0, history: []
+        };
+        const avatars = ['🤓','🤴','👸','🧙‍♀️','🙎‍♂️'];
+
+        function saveData() {
+            localStorage.setItem('ludvie_tka_save', JSON.stringify(userData));
+            updateDashboard();
+        }
+
+        function getLevelInfo() {
+            let lvl = Math.floor(userData.exp / 100) + 1;
+            let title = "Beginner";
+            if(lvl > 10) title = "Intermediate";
+            if(lvl > 30) title = "Advanced";
+            if(lvl > 60) title = "Master";
+            if(lvl > 80) title = "Genius";
+            if(lvl > 100) lvl = 100;
+            return { level: lvl, title: title };
+        }
+
+        function updateDashboard() {
+            document.getElementById('user-name').innerText = userData.name;
+            document.getElementById('avatar-display').innerText = userData.avatar;
+            document.getElementById('user-exp').innerText = userData.exp;
+            
+            let info = getLevelInfo();
+            document.getElementById('user-level').innerText = info.level;
+            document.getElementById('user-title').innerText = info.title;
+            
+            let currentLevelExp = info.level * 100;
+            document.getElementById('exp-next').innerText = currentLevelExp;
+            let percent = ((userData.exp % 100) / 100) * 100;
+            if(info.level === 100) percent = 100;
+            document.getElementById('exp-bar').style.width = percent + '%';
+            
+            let tbody = document.getElementById('raport-body');
+            tbody.innerHTML = '';
+            userData.history.forEach(h => {
+                tbody.innerHTML += `<tr><td>${h.topic}</td><td>${h.benar}</td><td>${h.salah}</td><td>+${h.exp} EXP</td></tr>`;
+            });
+        }
+
+        function changeName() {
+            let newName = prompt("Masukkan namamu:", userData.name);
+            if(newName && newName.trim() !== '') { userData.name = newName; saveData(); }
+        }
+
+        function changeAvatar() {
+            let idx = avatars.indexOf(userData.avatar);
+            userData.avatar = avatars[(idx + 1) % avatars.length];
+            saveData();
+        }
+
+        function nav(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            if(pageId === 'dashboard') updateDashboard();
+        }
+
+        // --- SISTEM SUARA NATIVE WEB SPEECH API (DIJAMIN BUNYI LOKAL 100%) ---
+        function speak(text, mentor) {
+            if (!('speechSynthesis' in window)) {
+                alert("Browser kamu tidak mendukung suara Text-to-Speech.");
+                return;
+            }
+
+            // Hentikan suara yang sedang berjalan agar tidak bertumpuk
+            window.speechSynthesis.cancel();
+
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+
+            // Pengaturan Karakter Suara via Pitch & Rate:
+            if (mentor === 'Xaviera') {
+                utterance.pitch = 1.2;  // Ceria & Ramah
+                utterance.rate = 1.0;
+            } else if (mentor === 'Jerome') {
+                utterance.pitch = 0.75; // Ngebass & Santai
+                utterance.rate = 0.95;
+            } else if (mentor === 'Sandy') {
+                utterance.pitch = 0.85; // Mantap & Fokus
+                utterance.rate = 1.1;
+            }
+
+            // Cari voice Bahasa Indonesia di HP/Laptop
+            let voices = window.speechSynthesis.getVoices();
+            let idVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID'));
+            if (idVoice) {
+                utterance.voice = idVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+        }
+
+        function greetMentor(mentor) {
+            let text = "";
+            if(mentor === 'Xaviera') text = `Halo ${userData.name}, di modul SD ini materinya lengkap dari bilangan sampai deskripsi data. Semangat belajarnya ya!`;
+            if(mentor === 'Jerome') text = `Mantap jiwa ${userData.name}! Di SMP materinya lengkap banget dari Aljabar sampai Peluang. Let's go!`;
+            if(mentor === 'Sandy') text = `Halo kak ${userData.name}, materi TKA SMA akan segera hadir! Tetap fokus ya!`;
+            speak(text, mentor);
+            alert(`${mentor}: "${text}"`);
+        }
+
+        // --- GENERATOR 50 SOAL LENGKAP ---
+        function generateQuestions(jenjang, materi) {
+            let qs = [];
+            for(let i = 1; i <= 50; i++) {
+                let qObj = {};
+                if(jenjang === 'SD' && materi === 'Bilangan') {
+                    let a = Math.floor(Math.random() * 12) + 2;
+                    let b = Math.floor(Math.random() * 10) + 2;
+                    let ans = a * b;
+                    qObj = {
+                        q: `Berapakah hasil perkalian dari ${a} × ${b}? (SD Bilangan #${i})`,
+                        options: [ans, ans+3, ans-2, ans+5].sort(() => Math.random() - 0.5),
+                        ans: ans,
+                        exp: `Pembahasan: Perkalian dasar ${a} dikali ${b} menghasilkan ${ans}.`,
+                        mentor: 'Xaviera'
+                    };
+                } else if(jenjang === 'SD' && materi === 'Geometri') {
+                    let s = Math.floor(Math.random() * 15) + 3;
+                    let ans = s * s;
+                    qObj = {
+                        q: `Sebuah ubin berbentuk persegi memiliki panjang sisi ${s} cm. Berapa luas ubin tersebut?`,
+                        options: [ans, ans+4, s*4, ans-2].sort(() => Math.random() - 0.5),
+                        ans: ans,
+                        exp: `Pembahasan: Luas persegi dihitung dengan rumus sisi × sisi = ${s} × ${s} = ${ans} cm².`,
+                        mentor: 'Xaviera'
+                    };
+                } else if(jenjang === 'SD' && materi === 'Statistik') {
+                    let d1 = Math.floor(Math.random() * 5) + 6;
+                    let d2 = Math.floor(Math.random() * 5) + 8;
+                    let d3 = Math.floor(Math.random() * 5) + 7;
+                    let mean = (d1 + d2 + d3) / 3;
+                    if(!Number.isInteger(mean)) mean = mean.toFixed(1);
+                    qObj = {
+                        q: `Nilai ulangan matematika 3 anak adalah ${d1}, ${d2}, dan ${d3}. Berapa rata-rata (mean) nilai mereka?`,
+                        options: [mean, parseFloat(mean)+1, parseFloat(mean)-1, parseFloat(mean)+2].sort(() => Math.random() - 0.5),
+                        ans: mean,
+                        exp: `Pembahasan: Rata-rata = Jumlah seluruh nilai (${d1}+${d2}+${d3}) dibagi jumlah data (3) = ${mean}.`,
+                        mentor: 'Xaviera'
+                    };
+                } else if(jenjang === 'SMP' && materi === 'Bilangan') {
+                    let p = Math.floor(Math.random() * 5) + 2;
+                    let ans = Math.pow(p, 3);
+                    qObj = {
+                        q: `Berapakah nilai dari perpangkatan ${p}³ (pangkat tiga)?`,
+                        options: [ans, p*3, ans+p, ans-2].sort(() => Math.random() - 0.5),
+                        ans: ans,
+                        exp: `Pembahasan: ${p}³ = ${p} × ${p} × ${p} = ${ans}.`,
+                        mentor: 'Jerome'
+                    };
+                } else if(jenjang === 'SMP' && materi === 'Aljabar') {
+                    let a = Math.floor(Math.random() * 4) + 2;
+                    let b = Math.floor(Math.random() * 10) + 1;
+                    let x = Math.floor(Math.random() * 8) + 1;
+                    let c = (a * x) + b;
+                    qObj = {
+                        q: `Tentukan nilai x dari persamaan linier: ${a}x + ${b} = ${c}`,
+                        options: [x, x+1, x-2, x+3].sort(() => Math.random() - 0.5),
+                        ans: x,
+                        exp: `Pembahasan: ${a}x = ${c} - ${b} => ${a}x = ${c-b} => x = ${x}.`,
+                        mentor: 'Jerome'
+                    };
+                } else if(jenjang === 'SMP' && materi === 'Geometri') {
+                    let a = 3, b = 4;
+                    let mult = Math.floor(Math.random() * 3) + 1;
+                    let sa = a * mult, sb = b * mult, sc = 5 * mult;
+                    qObj = {
+                        q: `Segitiga siku-siku memiliki alas ${sa} cm dan tinggi ${sb} cm. Berapa panjang sisi miringnya?`,
+                        options: [sc, sc+2, sc-1, sc+4].sort(() => Math.random() - 0.5),
+                        ans: sc,
+                        exp: `Pembahasan: Tripel Pythagoras c = √(${sa}² + ${sb}²) = ${sc} cm.`,
+                        mentor: 'Jerome'
+                    };
+                } else if(jenjang === 'SMP' && materi === 'Statistik') {
+                    qObj = {
+                        q: `Sebuah dadu dilempar sekali. Berapa peluang munculnya angka genap?`,
+                        options: ["1/2", "1/3", "1/6", "2/3"],
+                        ans: "1/2",
+                        exp: `Pembahasan: Angka genap pada dadu ada 3 (2, 4, 6) dari total 6 sisi. Jadi peluangnya 3/6 = 1/2.`,
+                        mentor: 'Jerome'
+                    };
+                } else if(jenjang === 'Survei') {
+                    qObj = {
+                        q: `(Simulasi Survei #${i}) Bagaimana sikapmu jika kelompokmu kalah dalam lomba cerdas cermat sekolah?`,
+                        options: [
+                            "Menerima kekalahan dengan sportif dan mengevaluasi diri", 
+                            "Marah dan menuduh juri tidak adil", 
+                            "Keluar dari tim dan tidak mau bicara", 
+                            "Menyalahkan teman sekelompok"
+                        ],
+                        ans: "Menerima kekalahan dengan sportif dan mengevaluasi diri",
+                        exp: `Pembahasan: Sikap sportif dan reflektif mencerminkan Profil Pelajar Pancasila yang tangguh.`,
+                        mentor: 'Jerome'
+                    };
+                }
+                qs.push(qObj);
+            }
+            return qs;
+        }
+
+        let currentQuiz = [];
+        let currentQIndex = 0;
+        let sessionStats = { topic: "", benar: 0, salah: 0, exp: 0 };
+        let quizMentor = "";
+
+        function startQuiz(jenjang, materi) {
+            currentQuiz = generateQuestions(jenjang, materi);
+            currentQIndex = 0;
+            sessionStats = { topic: `${jenjang} - ${materi}`, benar: 0, salah: 0, exp: 0 };
+            quizMentor = currentQuiz[0].mentor;
+            
+            document.getElementById('quiz-title').innerText = `Latihan Soal: ${jenjang} (${materi})`;
+            speak(`Mulai 50 soal ${materi}. Semangat!`, quizMentor);
+            nav('quiz-play');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            let q = currentQuiz[currentQIndex];
+            document.getElementById('q-current').innerText = currentQIndex + 1;
+            document.getElementById('question-text').innerText = q.q;
+            
+            let optsHtml = "";
+            q.options.forEach((opt) => {
+                optsHtml += `<button class="option-btn" onclick="checkAnswer(this, '${opt}')">${opt}</button>`;
+            });
+            document.getElementById('options-grid').innerHTML = optsHtml;
+            document.getElementById('analysis-box').style.display = 'none';
+            document.getElementById('btn-lanjut').style.display = 'none';
+        }
+
+        function checkAnswer(btnElement, selected) {
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            let q = currentQuiz[currentQIndex];
+            let analysisBox = document.getElementById('analysis-box');
+            
+            if(selected == q.ans) {
+                btnElement.classList.add('correct');
+                sessionStats.benar++;
+                sessionStats.exp += 5;
+                userData.exp += 5;
+                analysisBox.innerHTML = `✅ <b>BENAR! (+5 EXP)</b><br>${q.exp}`;
+                analysisBox.style.backgroundColor = '#2ed573';
+                analysisBox.style.color = 'white';
+                speak("Tepat sekali!", quizMentor);
+            } else {
+                btnElement.classList.add('wrong');
+                sessionStats.salah++;
+                document.querySelectorAll('.option-btn').forEach(b => { if(b.innerText == q.ans) b.classList.add('correct'); });
+                analysisBox.innerHTML = `❌ <b>SALAH! (0 EXP)</b><br>${q.exp}`;
+                analysisBox.style.backgroundColor = '#ff4757';
+                analysisBox.style.color = 'white';
+                speak("Kurang tepat, perhatikan pembahasannya ya.", quizMentor);
+            }
+            
+            analysisBox.style.display = 'block';
+            saveData();
+            
+            let nextBtn = document.getElementById('btn-lanjut');
+            nextBtn.style.display = 'inline-block';
+            nextBtn.innerText = (currentQIndex === 49) ? "Selesai & Lihat Raport 🏆" : "Selanjutnya ➡️";
+        }
+
+        function nextQuestion() {
+            if(currentQIndex < 49) {
+                currentQIndex++;
+                renderQuestion();
+            } else {
+                userData.history.unshift(sessionStats);
+                saveData();
+                speak(`Luar biasa! Latihan selesai dan kamu mendapat ${sessionStats.exp} EXP.`, quizMentor);
+                alert(`Latihan Selesai!\nBenar: ${sessionStats.benar}\nSalah: ${sessionStats.salah}\nEXP didapat: ${sessionStats.exp}`);
+                nav('raport');
+            }
+        }
+
+        function readModul(jenjang) {
+            let content = document.getElementById('modul-content');
+            content.style.display = 'block';
+            if(jenjang === 'SD') {
+                content.innerHTML = `
+                    <h3>📚 Modul Lengkap Matematika SD (Mentor Xaviera)</h3><hr><br>
+                    <b>1. Bilangan, Pecahan & Operasi Hitung</b><br>
+                    - Operasi hitung bilangan cacah, bulat, dan campuran.<br>
+                    - Pecahan senilai, penjumlahan/pengurangan pecahan, serta desimal dan persen.<br>
+                    - Menentukan FPB dan KPK dalam soal cerita sehari-hari.<br><br>
+                    <b>2. Geometri & Pengukuran</b><br>
+                    - Luas dan keliling bangun datar (persegi, persegi panjang, segitiga, lingkaran).<br>
+                    - Volume kubus dan balok.<br>
+                    - Konversi satuan panjang, berat, dan waktu.<br><br>
+                    <b>3. Pengolahan Data (Statistika Dasar)</b><br>
+                    - Membaca dan menafsirkan diagram batang, tabel, dan diagram garis.<br>
+                    - Menghitung nilai rata-rata (mean) dari suatu kumpulan data sederhana.
+                `;
+            } else if (jenjang === 'SMP') {
+                content.innerHTML = `
+                    <h3>📚 Modul Lengkap TKA SMP (Mentor Jerome)</h3><hr><br>
+                    <b>1. Bilangan Real & Aritmetika Sosial</b><br>
+                    - Bilangan berpangkat bulat/pecahan dan bentuk akar.<br>
+                    - Pola bilangan, barisan, dan deret aritmetika/geometri.<br>
+                    - Aritmetika sosial (persentase untung/rugi, diskon, bruto/netto, dan bunga tunggal).<br><br>
+                    <b>2. Aljabar & Fungsi</b><br>
+                    - Operasi bentuk aljabar, pemfaktoran, persamaan dan pertidaksamaan linier satu variabel.<br>
+                    - Sistem Persamaan Linier Dua Variabel (SPLDV).<br>
+                    - Relasi dan fungsi, grafik persamaan garis lurus.<br><br>
+                    <b>3. Geometri & Transformasi</b><br>
+                    - Teorema Pythagoras dan penerapannya.<br>
+                    - Garis dan sudut, kesebangunan dan kekongruenan bangun datar.<br>
+                    - Transformasi geometri (Refleksi, Translasi, Rotasi, Dilatasi).<br><br>
+                    <b>4. Data & Peluang</b><br>
+                    - Statistika: Mean, Median, Modus, serta jangkauan data.<br>
+                    - Peluang kejadian tunggal dan frekuensi harapan.
+                `;
+            }
+            content.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            updateDashboard();
+        };
+    </script>
+</body>
+</html>
